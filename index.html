@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            perspective: 1000px;
+        }
+
+        .form-container {
+            max-width: 350px;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s ease;
+            text-align: center;
+        }
+
+        input {
+            width: calc(100% - 30px);
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #6e8efb;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            background: #6e8efb;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            background: #5b77e1;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 30px;
+            top: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Submit Button Enabled on Input</h1>
+    <p>Create a form where the submit button is disabled by default and only becomes enabled when all required fields
+        are filled out. Use input events to track changes in the fields.</p>
+    <div class="form-container" id="formContainer">
+        <form id="myForm">
+            <h2>Create Account</h2>
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <div class="password-container">
+                <input type="password" id="password" placeholder="Password" required>
+                <span class="eye-icon" id="togglePassword"><i class="fas fa-eye"></i></span>
+            </div>
+            <button type="submit" id="submitBtn" disabled>Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const submitBtn = document.getElementById("submitBtn");
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                submitBtn.disabled = ![...document.querySelectorAll('input')].every(i => i.value.trim());
+            });
+        });
+
+        togglePassword.addEventListener("click", () => {
+            const type = passwordInput.type === "password" ? "text" : "password";
+            passwordInput.type = type;
+            togglePassword.innerHTML = type === "password"
+                ? '<i class="fas fa-eye"></i>'
+                : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * -20;
+            document.getElementById("formContainer").style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+
+        document.addEventListener("mouseleave", () => {
+            document.getElementById("formContainer").style.transform = "rotateY(0) rotateX(0)";
+        });
+    </script>
+
+</body>
+
+</html>
